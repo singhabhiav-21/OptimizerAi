@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Tracker - Login</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        /* Field error styling */
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Financial Tracker</h2>
+
+        <div class="form-toggle">
+            <button class="toggle-btn active" onclick="showForm('login')">Login</button>
+            <button class="toggle-btn" onclick="showForm('register')">Register</button>
+        </div>
+
+        <!-- Login Form -->
+        <div id="loginForm" class="form-container active">
+            <form onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" required autocomplete="email">
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn" id="login-btn">Login</button>
+            </form>
+            <div id="login-message" class="message"></div>
+        </div>
+
+        <!-- Register Form -->
+        <div id="registerForm" class="form-container">
+            <form onsubmit="handleRegister(event)">
+                <div class="input-group">
+                    <label for="register-name">Full Name</label>
+                    <input type="text" id="register-name" required autocomplete="name" placeholder="Eric Svensson">
+                    <div class="name-requirements">
+                        <strong>Name requirements:</strong>
+                        Must include first and last name (e.g., "Eric Svensson"), no numbers or special characters
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" required autocomplete="email" placeholder="ericsven@example.com">
+                </div>
+                <div class="input-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" required autocomplete="new-password">
+                    <div class="password-requirements">
+                        <strong>Password must contain:</strong>
+                        <ul>
+                            <li>At least 8 characters</li>
+                            <li>One uppercase letter (A-Z)</li>
+                            <li>One lowercase letter (a-z)</li>
+                            <li>One number (0-9)</li>
+                            <li>One special character (!@#$%^&*...)</li>
+                        </ul>
+                    </div>
+                </div>
+                <button type="submit" class="btn" id="register-btn">Register</button>
+            </form>
+            <div id="register-message" class="message"></div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

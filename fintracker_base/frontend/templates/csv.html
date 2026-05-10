@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import CSV - FinTracker</title>
+    <script src="/static/js/csv.js" defer></script>
+    <link rel="stylesheet" href="../static/css/csv.css">
+</head>
+<body>
+<!-- Toast Container -->
+<div id="toast-container"></div>
+
+<!-- Sidebar Navigation -->
+<div class="sidebar">
+    <div class="logo">FinTracker</div>
+    <a class="nav-item" href="/dashboard">
+        <span></span> Dashboard
+    </a>
+    <a class="nav-item" href="/accounts.html">
+        <span></span> Accounts
+    </a>
+    <a class="nav-item" href="/transactions.html">
+        <span></span> Transactions
+    </a>
+    <span class="nav-item active">Import CSV</span>
+    <a href="/reports.html" class="nav-item ">
+                <span></span> Reports
+    </a>
+        <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+            <a href="#" class="nav-item disabled" id="user-btn">
+            </a>
+            <a href="#" class="nav-item" onclick="logout(); return false;">
+            Logout
+            </a>
+        </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="header">
+        <h1>Import Transactions from CSV</h1>
+    </div>
+
+    <div class="import-container">
+        <!-- Instructions Section -->
+        <div class="instructions-card">
+            <h3>CSV File Requirements</h3>
+            <ul class="requirements-list">
+                <li><strong>Required Columns:</strong> Value date, Text, Amount</li>
+                <li><strong>Optional Column:</strong> Balance</li>
+                <li><strong>File Format:</strong> CSV (Comma Separated Values)</li>
+                <li><strong>Max File Size:</strong> 5 MB</li>
+                <li><strong>Date Format:</strong> YYYY-MM-DD (e.g., 2024-01-15)</li>
+            </ul>
+            <div class="info-note">
+                <span style="font-size: 20px;"></span>
+                <strong>Note:</strong> Duplicate transactions will be automatically detected and skipped to prevent double entries.
+            </div>
+        </div>
+
+        <!-- Upload Area -->
+        <div class="upload-section">
+            <div class="upload-area" id="uploadArea">
+                <svg width="64" height="64" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="upload-icon">
+                    <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                </svg>
+                <p class="upload-text">Drag and drop your CSV file here, or</p>
+                <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                    Choose File
+                </button>
+                <input type="file" id="fileInput" accept=".csv" style="display: none;">
+                <p class="upload-hint">Only CSV files up to 5MB are accepted</p>
+            </div>
+
+            <!-- Selected File Info -->
+            <div class="selected-file" id="selectedFile">
+                <div class="file-details">
+                    <span class="file-icon">📄</span>
+                    <div class="file-meta">
+                        <strong id="fileName">filename.csv</strong>
+                        <span id="fileSize" class="file-size">0 KB</span>
+                    </div>
+                </div>
+                <button type="button" class="btn-remove" onclick="removeFile()" title="Remove file">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Import Actions -->
+            <div class="import-actions" id="importActions" style="display: none;">
+                <button type="button" class="btn btn-success btn-large" onclick="uploadFile()">
+                    📤 Import Transactions
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="removeFile()">
+                    Cancel
+                </button>
+            </div>
+        </div>
+
+        <!-- Progress Container -->
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-header">
+                <h3>Processing your file...</h3>
+                <p id="progressStatus">Uploading file...</p>
+            </div>
+            <div class="progress-bar-wrapper">
+                <div class="progress-bar" id="progressBar">0%</div>
+            </div>
+        </div>
+
+        <!-- Import Results -->
+        <div class="import-results" id="importResults">
+            <div class="result-header">
+                <span class="result-icon" id="resultIcon">✅</span>
+                <h3 id="resultTitle">Import Successful!</h3>
+            </div>
+            <div class="result-stats" id="resultStats">
+                <!-- Stats will be inserted here -->
+            </div>
+            <div class="result-actions">
+                <button type="button" class="btn btn-primary" onclick="window.location.href='/transactions.html'">
+                    View Transactions
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="resetImport()">
+                    Import Another File
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - FinTracker</title>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+<!-- ==================== SIDEBAR ==================== -->
+<div class="sidebar">
+    <div class="logo">FinTracker</div>
+    <a href="/dashboard" class="nav-item active">
+        <span></span>
+        <span>Dashboard</span>
+    </a>
+    <a href="/accounts.html" class="nav-item">
+        <span></span>
+        <span>Accounts</span>
+    </a>
+    <a href="/transactions.html" class="nav-item">
+        <span></span>
+        <span>Transactions</span>
+    </a>
+    <a href="/import.html" class="nav-item">
+        <span></span>
+        <span>Import CSV</span>
+    </a>
+    <a href="/reports.html" class="nav-item ">
+                <span></span> Reports
+    </a>
+     <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+         <a href="#" class="nav-item disabled" id="user-btn">
+            </a>
+         <a href="#" class="nav-item" onclick="logout(); return false;">
+            Logout
+            </a>
+        </div>
+</div>
+
+<!-- ==================== MAIN CONTENT ==================== -->
+<div class="main-content">
+    <!-- HEADER -->
+    <div class="header">
+        <h1>Dashboard</h1>
+        <!-- Currency selector and logout button will be added here by JS -->
+    </div>
+
+    <!-- STATISTICS CARDS -->
+    <div class="cards-grid">
+        <!-- Total Balance Card -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Total Balance</span>
+                <span></span>
+            </div>
+            <div class="card-amount" id="total-balance">$0.00</div>
+        </div>
+
+        <!-- Total Accounts Card -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Accounts</span>
+                <span></span>
+            </div>
+            <div class="card-amount" id="total-accounts">0</div>
+        </div>
+    </div>
+
+    <!-- WEEKLY CHART SECTION -->
+    <div class="section" style="margin-bottom: 30px;">
+        <div class="section-header">
+            <h2>Weekly Income vs Expenses</h2>
+        </div>
+
+        <!-- Chart container with proper background -->
+        <div style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            <div style="position: relative; height: 400px; width: 100%;">
+                <canvas id="weekly-chart"></canvas>
+            </div>
+            <!-- Summary stats will be inserted here -->
+            <div id="chart-summary"></div>
+        </div>
+    </div>
+
+    <!-- RECENT TRANSACTIONS SECTION -->
+    <div class="section">
+        <div class="section-header">
+            <h2>Recent Transactions</h2>
+            <a href="transactions.html" class="btn btn-primary">View All →</a>
+        </div>
+        <div id="recent-transactions">
+            <div class="loading">Loading transactions</div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Container (dynamically created by JS) -->
+<div id="toast-container"></div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="/static/js/dashboard.js"></script>
+</body>
+</html>

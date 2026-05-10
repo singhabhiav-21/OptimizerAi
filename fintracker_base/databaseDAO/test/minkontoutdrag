@@ -1,0 +1,21 @@
+Value date,Text,Amount,Balance
+2024-01-05,Salary Deposit,3500.00,3500.00
+2024-01-06,Supermarket Groceries,-85.50,3414.50
+2024-01-07,Online Shopping - Amazon,-129.99,3284.51
+2024-01-08,ATM Withdrawal,-200.00,3084.51
+2024-01-10,Netflix Subscription,-15.99,3068.52
+2024-01-12,Restaurant Dinner,-67.80,3000.72
+2024-01-14,Gas Station,-55.25,2945.47
+2024-01-15,Phone Bill,-45.00,2900.47
+2024-01-16,Freelance Payment,850.00,3750.47
+2024-01-18,Bookstore Purchase,-32.99,3717.48
+2024-01-20,Gym Membership,-29.99,3687.49
+2024-01-22,Utility Bill,-145.60,3541.89
+2024-01-24,Public Transport,-40.00,3501.89
+2024-01-25,Coffee Shop,-6.50,3495.39
+2024-01-26,Pharmacy,-28.75,3466.64
+2024-01-28,Bonus Payment,500.00,3966.64
+2024-01-30,Insurance Premium,-120.00,3846.64
+2024-02-01,Clothing Store,-89.95,3756.69
+2024-02-03,Concert Tickets,-150.00,3606.69
+2024-02-05,Bank Transfer to Savings,-1000.00,2606.69

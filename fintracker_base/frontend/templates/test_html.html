@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Button</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        button { padding: 10px 20px; font-size: 16px; margin: 10px; }
+        #debug { margin-top: 20px; padding: 10px; background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <h1>Test Add Account Button</h1>
+
+    <!-- Test Button 1: Inline onclick -->
+    <button onclick="testButton1()">Test Button 1 (inline onclick)</button>
+
+    <!-- Test Button 2: Event Listener -->
+    <button id="testButton2">Test Button 2 (event listener)</button>
+
+    <!-- Your actual button -->
+    <button onclick="openModal('addAccount')">+ Add Account (Your Button)</button>
+
+    <div id="debug"></div>
+
+    <script>
+        function log(msg) {
+            document.getElementById('debug').innerHTML += msg + '<br>';
+            console.log(msg);
+        }
+
+        function testButton1() {
+            log('Test Button 1 clicked!');
+        }
+
+        document.getElementById('testButton2').addEventListener('click', function() {
+            log('Test Button 2 clicked!');
+        });
+
+        function openModal(id) {
+            log(`openModal called with id: ${id}`);
+
+            // Check if function exists
+            log(`openModal function exists: ${typeof openModal}`);
+
+            // Check if element exists
+            const modal = document.getElementById(id);
+            log(`Modal element found: ${modal ? 'YES' : 'NO'}`);
+
+            if (modal) {
+                modal.style.display = 'block';
+                log('Modal should be visible now');
+            }
+        }
+
+        log('Script loaded!');
+        log(`openModal function defined: ${typeof openModal === 'function'}`);
+    </script>
+</body>
+</html>

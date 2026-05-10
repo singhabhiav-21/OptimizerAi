@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+starlette
+pydantic
+itsdangerous
+python-dotenv
+mysql-connector-python
+python-multipart
+jinja2
+pandas
+numpy
+matplotlib
+requests
+reportlab
+httpx==0.27.0
+groq==0.9.0

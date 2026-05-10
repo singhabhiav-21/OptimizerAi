@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Accounts</title>
+    <link rel="stylesheet" href="/static/css/account.css">
+
+    <!-- Load accounts.js -->
+    <script src="static/js/accounts.js" defer></script>
+
+    <!-- Debug logging -->
+    <script>
+        console.log('=== ACCOUNTS PAGE LOADING ===');
+        console.log('Location:', window.location.href);
+        console.log('User ID:', sessionStorage.getItem('user_id'));
+    </script>
+    <link rel="stylesheet" href="../static/css/account.css">
+</head>
+<body>
+<div id="toast-container"></div>
+
+<div class="sidebar">
+    <div class="logo">FinTracker</div>
+
+    <a class="nav-item" href="/dashboard">
+        <span></span> Dashboard
+    </a>
+
+    <a class="nav-item active" href="/accounts.html">
+        <span></span> Accounts
+    </a>
+
+    <a class="nav-item" href="/transactions.html">
+        <span></span> Transactions
+    </a>
+
+    <a class="nav-item" href="/import.html">
+        <span></span> Import CSV
+    </a>
+    <a href="/reports.html" class="nav-item ">
+                <span></span> Reports
+    </a>
+     <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+         <a href="#" class="nav-item disabled" id="user-btn">
+            </a>
+         <a href="#" class="nav-item" onclick="logout(); return false;">
+            Logout
+            </a>
+        </div>
+</div>
+
+<div class="main-content">
+    <div class="header">
+        <h1>Accounts</h1>
+    </div>
+
+    <button class="btn btn-primary" onclick="openModal('addAccount')">+ Add Account</button>
+
+    <div id="accounts-list">
+        <p>Loading accounts...</p>
+    </div>
+</div>
+
+<!-- Add Account Modal -->
+<div id="addAccount" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('addAccount')">&times;</span>
+        <h2 class="modal-header">Add New Account</h2>
+        <form id="addAccountForm">
+            <div class="form-group">
+                <label class="form-label" for="account-name">Account Name *</label>
+                <input type="text" class="form-input" id="account-name" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="account-type">Account Type *</label>
+                <select class="form-select" id="account-type" required>
+                    <option value="">Select type</option>
+                    <option value="Savings">Savings</option>
+                    <option value="Current">Current</option>
+                    <option value="Fixed deposit">Fixed Deposit</option>
+                    <option value="Recurring deposit">Recurring Deposit</option>
+                    <option value="Joint">Joint</option>
+                    <option value="Student">Student</option>
+                    <option value="Basic/Zero-balance">Basic/Zero-Balance</option>
+                    <option value="Stocks">Stocks</option>
+                    <option value="Crypto">Crypto</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="account-balance">Initial Balance *</label>
+                <input type="number" class="form-input" id="account-balance"
+                       required min="0" max="10000000" step="0.01" value="0">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="account-currency">Currency *</label>
+                <input type="text" class="form-input" id="account-currency" value="USD" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="account-platform">Platform/Bank Name</label>
+                <input type="text" class="form-input" id="account-platform"
+                       placeholder="e.g., Chase, Robinhood">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Add Account</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal('addAccount')">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Delete Account Modal -->
+<div id="deleteConfirmModal" class="modal">
+    <div class="modal-content" style="max-width: 450px;">
+        <span class="close" onclick="closeDeleteModal()">&times;</span>
+        <h2 class="modal-header" style="color: #ef4444;">⚠️ Delete Account</h2>
+
+        <div id="account-to-delete-info" style="background: #f9fafb; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #ef4444;">
+            <!-- Account details will be inserted here -->
+        </div>
+
+        <p style="margin-bottom: 20px; color: #666; font-size: 14px;">
+            This action cannot be undone. Please enter your password to confirm deletion.
+        </p>
+
+        <form id="deleteAccountForm">
+            <div class="form-group">
+                <label class="form-label" for="delete-password">Your Password *</label>
+                <input type="password" class="form-input" id="delete-password"
+                       placeholder="Enter your password" required autocomplete="current-password">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-danger">Delete Account</button>
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Update Account Modal -->
+<div id="updateAccountModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeUpdateModal()">&times;</span>
+        <h2 class="modal-header">Update Account</h2>
+        <form id="updateAccountForm">
+            <input type="hidden" id="update-account-id">
+
+            <div class="form-group">
+                <label class="form-label" for="update-account-name">Account Name *</label>
+                <input type="text" class="form-input" id="update-account-name" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="update-account-type">Account Type *</label>
+                <select class="form-select" id="update-account-type" required>
+                    <option value="">Select type</option>
+                    <option value="Savings">Savings</option>
+                    <option value="Current">Current</option>
+                    <option value="Fixed deposit">Fixed Deposit</option>
+                    <option value="Recurring deposit">Recurring Deposit</option>
+                    <option value="Joint">Joint</option>
+                    <option value="Student">Student</option>
+                    <option value="Basic/Zero-balance">Basic/Zero-Balance</option>
+                    <option value="Stocks">Stocks</option>
+                    <option value="Crypto">Crypto</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="update-account-balance">Balance *</label>
+                <input type="number" class="form-input" id="update-account-balance"
+                       required min="0" max="10000000" step="0.01">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="update-account-currency">Currency *</label>
+                <input type="text" class="form-input" id="update-account-currency" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="update-account-platform">Platform/Bank Name</label>
+                <input type="text" class="form-input" id="update-account-platform"
+                       placeholder="e.g., Chase, Robinhood">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Update Account</button>
+                <button type="button" class="btn btn-secondary" onclick="closeUpdateModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
