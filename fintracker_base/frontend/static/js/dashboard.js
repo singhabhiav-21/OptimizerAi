@@ -584,7 +584,7 @@ function displayRecentTransactions(data) {
                     ` : ''}
                 </div>
                 <div style="font-size: 18px; font-weight: 700; color: ${color};">
-                    ${sign}${formatCurrency(Math.abs(amount), TRANSACTION_CURRENCY)}
+                    $${sign}${Math.abs(amount).toLocaleString('en', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                 </div>
             </div>
         `;

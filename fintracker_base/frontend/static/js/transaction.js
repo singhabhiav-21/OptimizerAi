@@ -129,7 +129,7 @@ async function loadTransactions() {
                                 ${t.description ? `<small>${escapeHtml(t.description)}</small>` : ''}
                             </div>
                             <div style="color:${color}">
-                                <strong>${sign}${Math.abs(amount).toFixed(2)}kr</strong>
+                                <strong>$${sign}${Math.abs(amount).toFixed(2)}</strong>
                             </div>
                         </div>
                         <div class="transaction-actions">

@@ -5,37 +5,506 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - FinTracker</title>
     <link rel="stylesheet" href="/static/css/dashboard.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+        :root {
+            --bg:       #0a0c10;
+            --surface:  #111318;
+            --surface2: #181c24;
+            --border:   #1e2330;
+            --accent:   #00d4aa;
+            --accent2:  #3b82f6;
+            --warn:     #f59e0b;
+            --danger:   #ef4444;
+            --success:  #00d4aa;
+            --text:     #e2e8f0;
+            --muted:    #64748b;
+            --mono: 'IBM Plex Mono', monospace;
+            --sans: 'IBM Plex Sans', sans-serif;
+        }
+
+        /* ── Reset ── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+        /* ══════════════════════════════════════
+           SIDEBAR
+        ══════════════════════════════════════ */
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            width: 220px;
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .logo {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            padding: 20px 20px 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 20px;
+            color: var(--muted);
+            text-decoration: none;
+            font-family: var(--mono);
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            transition: all 0.15s;
+            border-left: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .nav-item span:first-child { font-size: 14px; }
+
+        .nav-item:hover {
+            color: var(--text);
+            background: rgba(255,255,255,0.03);
+            border-left-color: var(--border);
+            transform: none; /* override dashboard.css */
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+            background: rgba(0,212,170,0.06);
+            border-left-color: var(--accent);
+            font-weight: 600;
+        }
+
+        .nav-item.disabled {
+            pointer-events: none;
+            opacity: 0.35;
+        }
+
+        .sidebar > div[style*="margin-top: auto"] {
+            margin-top: auto !important;
+            padding: 16px 0 !important;
+            border-top: 1px solid var(--border) !important;
+        }
+
+        /* ══════════════════════════════════════
+           MAIN CONTENT
+        ══════════════════════════════════════ */
+        .main-content {
+            margin-left: 220px;
+            flex: 1;
+            padding: 28px 28px 40px;
+            min-height: 100vh;
+            background: var(--bg);
+        }
+
+        /* ══════════════════════════════════════
+           HEADER
+        ══════════════════════════════════════ */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-family: var(--mono);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text);
+        }
+
+        .header button,
+        .header .btn {
+            font-family: var(--mono) !important;
+            font-size: 11px !important;
+            font-weight: 600 !important;
+            letter-spacing: 1px !important;
+            text-transform: uppercase !important;
+            background: transparent !important;
+            color: var(--danger) !important;
+            border: 1px solid var(--danger) !important;
+            border-radius: 6px !important;
+            padding: 7px 14px !important;
+            cursor: pointer !important;
+            transition: all 0.15s !important;
+            box-shadow: none !important;
+        }
+
+        .header button:hover,
+        .header .btn:hover {
+            background: rgba(239,68,68,0.08) !important;
+            transform: none !important;
+        }
+
+        /* ══════════════════════════════════════
+           CARDS GRID
+        ══════════════════════════════════════ */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: none;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .card:hover {
+            border-color: rgba(0,212,170,0.25);
+            background: var(--surface2);
+            transform: none; /* kill the float */
+            box-shadow: none;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        .card-header span:last-child {
+            font-size: 18px;
+            opacity: 0.4;
+        }
+
+        .card-amount {
+            font-family: var(--mono);
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--text);
+            letter-spacing: -0.5px;
+        }
+
+        /* ══════════════════════════════════════
+           SECTIONS
+        ══════════════════════════════════════ */
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 22px;
+            margin-bottom: 18px;
+            box-shadow: none;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-header h2 {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text);
+        }
+
+        /* Chart inner box */
+        .section > div[style*="background: white"] {
+            background: var(--surface2) !important;
+            border-radius: 8px !important;
+            border: 1px solid var(--border) !important;
+            box-shadow: none !important;
+        }
+
+        /* ══════════════════════════════════════
+           BUTTONS
+        ══════════════════════════════════════ */
+        .btn {
+            font-family: var(--mono) !important;
+            font-size: 11px !important;
+            font-weight: 600 !important;
+            letter-spacing: 1px !important;
+            text-transform: uppercase !important;
+            border-radius: 6px !important;
+            padding: 8px 16px !important;
+            transition: all 0.15s !important;
+            gap: 6px !important;
+        }
+
+        .btn-primary {
+            background: transparent !important;
+            color: var(--accent) !important;
+            border: 1px solid var(--accent) !important;
+            box-shadow: none !important;
+        }
+        .btn-primary:hover {
+            background: rgba(0,212,170,0.08) !important;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .btn-secondary {
+            background: var(--surface2) !important;
+            color: var(--muted) !important;
+            border: 1px solid var(--border) !important;
+        }
+        .btn-secondary:hover {
+            background: var(--border) !important;
+            transform: none !important;
+        }
+
+        .btn-success {
+            background: transparent !important;
+            color: var(--accent) !important;
+            border: 1px solid var(--accent) !important;
+        }
+        .btn-success:hover {
+            background: rgba(0,212,170,0.08) !important;
+            transform: none !important;
+        }
+
+        .btn-danger {
+            background: transparent !important;
+            color: var(--danger) !important;
+            border: 1px solid var(--danger) !important;
+            box-shadow: none !important;
+        }
+        .btn-danger:hover {
+            background: rgba(239,68,68,0.08) !important;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* ══════════════════════════════════════
+           TABLES
+        ══════════════════════════════════════ */
+        .table { width: 100%; border-collapse: collapse; }
+
+        .table th {
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+            font-weight: 500;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text);
+            font-family: var(--sans);
+        }
+
+        .table tr:last-child td { border-bottom: none; }
+
+        .table tr:hover td {
+            background: rgba(255,255,255,0.02);
+        }
+
+        /* ══════════════════════════════════════
+           TOAST NOTIFICATIONS
+        ══════════════════════════════════════ */
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 280px;
+            max-width: 380px;
+            pointer-events: all;
+            animation: slideInRight 0.25s ease, fadeOut 0.3s ease 2.7s;
+        }
+
+        .toast.error { border-left-color: var(--danger); }
+        .toast.success { border-left-color: var(--accent); }
+
+        .toast-icon { font-size: 18px; flex-shrink: 0; }
+
+        .toast-message {
+            flex: 1;
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .toast-close {
+            cursor: pointer;
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1;
+            transition: color 0.15s;
+        }
+        .toast-close:hover { color: var(--text); }
+
+        @keyframes slideInRight {
+            from { transform: translateX(360px); opacity: 0; }
+            to   { transform: translateX(0);     opacity: 1; }
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateX(360px); }
+        }
+
+        /* ══════════════════════════════════════
+           MESSAGES
+        ══════════════════════════════════════ */
+        .message-success {
+            background: rgba(0,212,170,0.08);
+            color: var(--accent);
+            border: 1px solid rgba(0,212,170,0.2);
+            padding: 10px 16px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-family: var(--mono);
+            font-size: 12px;
+        }
+
+        .message-error {
+            background: rgba(239,68,68,0.08);
+            color: var(--danger);
+            border: 1px solid rgba(239,68,68,0.2);
+            padding: 10px 16px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-family: var(--mono);
+            font-size: 12px;
+        }
+
+        /* ══════════════════════════════════════
+           LOADING
+        ══════════════════════════════════════ */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%,20%  { content: '.'; }
+            40%     { content: '..'; }
+            60%,100%{ content: '...'; }
+        }
+
+        /* ══════════════════════════════════════
+           RESPONSIVE
+        ══════════════════════════════════════ */
+        @media (max-width: 768px) {
+            .sidebar { width: 56px; }
+            .logo { font-size: 18px; letter-spacing: 0; padding: 16px 10px; text-align: center; }
+            .nav-item span:last-of-type { display: none; }
+            .main-content { margin-left: 56px; padding: 16px; }
+            .header h1 { font-size: 11px; }
+            .cards-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
 <!-- ==================== SIDEBAR ==================== -->
 <div class="sidebar">
     <div class="logo">FinTracker</div>
     <a href="/dashboard" class="nav-item active">
-        <span></span>
+        <span>◈</span>
         <span>Dashboard</span>
     </a>
     <a href="/accounts.html" class="nav-item">
-        <span></span>
+        <span>◻</span>
         <span>Accounts</span>
     </a>
     <a href="/transactions.html" class="nav-item">
-        <span></span>
+        <span>⇅</span>
         <span>Transactions</span>
     </a>
     <a href="/import.html" class="nav-item">
-        <span></span>
+        <span>⊕</span>
         <span>Import CSV</span>
     </a>
-    <a href="/reports.html" class="nav-item ">
-                <span></span> Reports
+    <a href="/reports.html" class="nav-item">
+        <span>◑</span>
+        <span>Reports</span>
     </a>
-     <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
-         <a href="#" class="nav-item disabled" id="user-btn">
-            </a>
-         <a href="#" class="nav-item" onclick="logout(); return false;">
-            Logout
-            </a>
-        </div>
+    <a href="/ai" class="nav-item">
+        <span>◑</span> Talk to Ai
+    </a>
+    <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+        <a href="#" class="nav-item disabled" id="user-btn">
+        </a>
+        <a href="#" class="nav-item" onclick="logout(); return false;">
+            <span>⏻</span>
+            <span>Logout</span>
+        </a>
+    </div>
 </div>
 
 <!-- ==================== MAIN CONTENT ==================== -->
@@ -52,7 +521,7 @@
         <div class="card">
             <div class="card-header">
                 <span class="card-title">Total Balance</span>
-                <span></span>
+                <span>◈</span>
             </div>
             <div class="card-amount" id="total-balance">$0.00</div>
         </div>
@@ -61,7 +530,7 @@
         <div class="card">
             <div class="card-header">
                 <span class="card-title">Accounts</span>
-                <span></span>
+                <span>◻</span>
             </div>
             <div class="card-amount" id="total-accounts">0</div>
         </div>

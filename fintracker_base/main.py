@@ -27,6 +27,7 @@ from fintracker_base.databaseDAO.transaction.transaction_DAO import (
     get_transaction, get_all_transactions
 )
 from fintracker_base.databaseDAO.transaction.importcsv import bankImporter
+from backend.router import router as ai_router
 
 # Currency imports
 from fintracker_base.Visuals.ExchangeRates import get_currency_converter
@@ -63,8 +64,7 @@ app.add_middleware(
     same_site="lax",
     https_only=True,
 )
-
-
+app.include_router(ai_router)
 # 3. Debug middleware LAST (executes FIRST, so you see raw requests)
 @app.middleware("http")
 async def debug_session_middleware(request: Request, call_next):
@@ -973,4 +973,9 @@ async def delete_report(report_id: int, current_user_id: int = Depends(get_curre
     except Exception:
         raise HTTPException(status_code=500, detail="Internal server error")
 
-
+@app.get("/ai")
+async def ai_page(request: Request):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return RedirectResponse(url="/", status_code=302)
+    return FileResponse(os.path.join(BASE_DIR, "frontend", "templates", "fin_ai.html"))
